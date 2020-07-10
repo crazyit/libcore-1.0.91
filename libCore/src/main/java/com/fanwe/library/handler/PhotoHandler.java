@@ -1,11 +1,15 @@
 package com.fanwe.library.handler;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.fanwe.library.utils.UriFileUtils;
 import com.fanwe.library.utils.SDFileUtil;
@@ -20,6 +24,7 @@ public class PhotoHandler extends OnActivityResultHandler
     public static final String TAKE_PHOTO_FILE_DIR_NAME = "take_photo";
     public static final int REQUEST_CODE_GET_PHOTO_FROM_CAMERA = 16542;
     public static final int REQUEST_CODE_GET_PHOTO_FROM_ALBUM = REQUEST_CODE_GET_PHOTO_FROM_CAMERA + 1;
+    public static final int RESULT_CODE_STARTCAMERA = REQUEST_CODE_GET_PHOTO_FROM_CAMERA + 2;
 
     private PhotoHandlerListener listener;
     private File takePhotoFile;
@@ -87,10 +92,39 @@ public class PhotoHandler extends OnActivityResultHandler
 
     public void getPhotoFromCamera(File saveFile)
     {
-        takePhotoFile = saveFile;
-        Intent intent = SDIntentUtil.getIntentTakePhoto(saveFile);
-        startActivityForResult(intent, REQUEST_CODE_GET_PHOTO_FROM_CAMERA);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    RESULT_CODE_STARTCAMERA);
+        }else {
+
+            takePhotoFile = saveFile;
+            Intent intent = SDIntentUtil.getIntentTakePhoto(saveFile);
+            startActivityForResult(intent, REQUEST_CODE_GET_PHOTO_FROM_CAMERA);
+        }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case RESULT_CODE_STARTCAMERA: {
+                boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (cameraAccepted) {
+                    File takePhotoFile = SDFileUtil.createDefaultFileUnderDir(takePhotoDir, ".jpg");
+                    getPhotoFromCamera(takePhotoFile);
+                } else {
+                    //用户授权拒绝之后，友情提示一下就可以了
+                    SDToast.showToast("请开启应用拍照权限");
+                }
+            }
+            break;
+            default:
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
