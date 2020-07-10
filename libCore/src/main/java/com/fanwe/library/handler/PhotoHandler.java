@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.fanwe.library.SDLibrary;
 import com.fanwe.library.utils.UriFileUtils;
 import com.fanwe.library.utils.SDFileUtil;
 import com.fanwe.library.utils.SDIntentUtil;
@@ -92,10 +95,10 @@ public class PhotoHandler extends OnActivityResultHandler
 
     public void getPhotoFromCamera(File saveFile)
     {
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission((Activity) SDLibrary.getInstance().getContext(),
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions((Activity) SDLibrary.getInstance().getContext(),
                     new String[]{Manifest.permission.CAMERA},
                     RESULT_CODE_STARTCAMERA);
         }else {
@@ -105,7 +108,7 @@ public class PhotoHandler extends OnActivityResultHandler
             startActivityForResult(intent, REQUEST_CODE_GET_PHOTO_FROM_CAMERA);
         }
     }
-    @Override
+//    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -122,7 +125,7 @@ public class PhotoHandler extends OnActivityResultHandler
             break;
             default:
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
