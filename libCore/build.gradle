@@ -32,9 +32,9 @@ dependencies {
 //    implementation 'com.android.support:support-compat:25.2.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
+//    compile 'com.android.support:support-v4:25.2.0'
+//    compile 'com.android.support:recyclerview-v7:25.2.0'
+//    compile 'com.android.support:appcompat-v7:25.2.0'
 
     compile 'com.alibaba:fastjson:1.1.45.android'
     compile 'com.github.zj565061763:res:1.0.6'
