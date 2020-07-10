@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fanwe.library.SDLibrary;
@@ -95,18 +96,20 @@ public class PhotoHandler extends OnActivityResultHandler
 
     public void getPhotoFromCamera(File saveFile)
     {
-        if (ContextCompat.checkSelfPermission((Activity) SDLibrary.getInstance().getContext(),
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) SDLibrary.getInstance().getContext(),
-                    new String[]{Manifest.permission.CAMERA},
-                    RESULT_CODE_STARTCAMERA);
-        }else {
-
+        Log.e("getPhotoFromCamera","getPhotoFromCamera begin");
+//        if (ContextCompat.checkSelfPermission((Activity) SDLibrary.getInstance().getContext(),
+//                Manifest.permission.CAMERA)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            Log.e("getPhotoFromCamera","no permission");
+//            ActivityCompat.requestPermissions((Activity) SDLibrary.getInstance().getContext(),
+//                    new String[]{Manifest.permission.CAMERA},
+//                    RESULT_CODE_STARTCAMERA);
+//        }else {
+            Log.e("getPhotoFromCamera","have permission");
             takePhotoFile = saveFile;
             Intent intent = SDIntentUtil.getIntentTakePhoto(saveFile);
             startActivityForResult(intent, REQUEST_CODE_GET_PHOTO_FROM_CAMERA);
-        }
+//        }
     }
 //    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
